@@ -30,12 +30,6 @@
       repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
       state: present
 
-  # - name: Updating apt cache
-  #   apt:
-  #     name: "*"
-  #     state: latest
-  #     update_cache: yes
-
   - name: Installing Docker Community edition
     apt:
       name: "{{ item }}"
@@ -45,40 +39,6 @@
       - "containerd.io"
       - "docker-ce"
       - "docker-ce-cli"
-
-  # - name: Installing containerd
-  #   apt:
-  #     name: "containerd"
-  #     state: latest
-  #     install_recommends: no
-  #     update_cache: yes
-
-  # - name: Installing Docker CLI
-  #   apt:
-  #     name: "docker-ce-cli"
-  #     state: latest
-  #     install_recommends: no
-  #     update_cache: yes
-
-  # - name: Configuring Docker systemd service
-  #   systemd:
-  #     name: docker.service
-  #     enabled: yes
-  #     masked: no
-
-  # - name: Configuring Docker socket
-  #   systemd:
-  #     name: docker.socket
-  #     masked: no
-
-  # - name: Rereading configs by systemd
-  #   systemd:
-  #     daemon_reload: yes
-
-  # - name: Starting Docker service
-  #   systemd:
-  #     name: docker.service
-  #     state: started
 
   - name: Adding VSCode GPG key
     apt_key:
