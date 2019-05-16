@@ -1,0 +1,117 @@
+- hosts: test
+  become: yes
+  become_method: 'sudo'
+  tasks:
+
+# Download some packages (e. g. Google Chrome, Slack, Telegram, docker, docker-compose, Visual Studio Code)
+
+  - name: Updating apt cache
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+
+  - name: Installing Google Chrome
+    apt:
+      deb: 'https://dl-ssl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
+
+  - name: Installing Slack Desktop
+    apt:
+      deb: 'https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.0-amd64.deb'
+
+  - name: Adding Docker GPG key
+    apt_key:
+      id: 0EBFCD88
+      url: "https://download.docker.com/linux/ubuntu/gpg"
+      state: present
+
+  - name: Adding Docker apt repository
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      state: present
+
+  # - name: Updating apt cache
+  #   apt:
+  #     name: "*"
+  #     state: latest
+  #     update_cache: yes
+
+  - name: Installing Docker Community edition
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items:
+      - "containerd.io"
+      - "docker-ce"
+      - "docker-ce-cli"
+
+  # - name: Installing containerd
+  #   apt:
+  #     name: "containerd"
+  #     state: latest
+  #     install_recommends: no
+  #     update_cache: yes
+
+  # - name: Installing Docker CLI
+  #   apt:
+  #     name: "docker-ce-cli"
+  #     state: latest
+  #     install_recommends: no
+  #     update_cache: yes
+
+  # - name: Configuring Docker systemd service
+  #   systemd:
+  #     name: docker.service
+  #     enabled: yes
+  #     masked: no
+
+  # - name: Configuring Docker socket
+  #   systemd:
+  #     name: docker.socket
+  #     masked: no
+
+  # - name: Rereading configs by systemd
+  #   systemd:
+  #     daemon_reload: yes
+
+  # - name: Starting Docker service
+  #   systemd:
+  #     name: docker.service
+  #     state: started
+
+  - name: Adding VSCode GPG key
+    apt_key:
+      url: "https://packages.microsoft.com/keys/microsoft.asc"
+      state: present
+
+  - name: Adding VSCode apt repository
+    apt_repository:
+      repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+      state: present
+
+  - name: Installing VSCode
+    apt:
+      name: code
+      state: present
+      update_cache: yes
+      install_recommends: no
+
+  - name: Installing docker-compose
+    pip:
+      name: "{{ item }}"
+    with_items:
+      - "docker-compose"
+      - "setuptools"
+
+  - name: Adding autocomplition for docker-compose
+    get_url:
+      url: "https://raw.githubusercontent.com/docker/compose/1.24.0/contrib/completion/bash/docker-compose"
+      dest: /etc/bash_completion.d/docker-compose
+      mode: 0755
+
+  - name: Adding user to group "docker"
+    user:
+      name: "{{ lookup('env','USER') }}"
+      groups: docker
+      append: yes
