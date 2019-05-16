@@ -1,6 +1,15 @@
 - hosts: test
   become: yes
   become_method: 'sudo'
+  vars_prompt:
+    - name: "vscode"
+      prompt: "Install VSCode? (yes/no)"
+      default: "no"
+      private: no
+    - name: "php_storm"
+      prompt: "Install Php-Storm? (yes/no)"
+      default: "no"
+      private: no
   tasks:
 
 # Download some packages (e. g. Google Chrome, Slack, Telegram, docker, docker-compose, Visual Studio Code)
@@ -44,11 +53,13 @@
     apt_key:
       url: "https://packages.microsoft.com/keys/microsoft.asc"
       state: present
+    when: vscode == "yes"
 
   - name: Adding VSCode apt repository
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
       state: present
+    when: vscode == "yes"
 
   - name: Installing VSCode
     apt:
@@ -56,6 +67,11 @@
       state: present
       update_cache: yes
       install_recommends: no
+    when: vscode == "yes"
+
+  - name: Installing php-storm
+    command: snap install phpstorm --classic
+    when: php_storm == "yes"
 
   - name: Installing docker-compose
     pip:
