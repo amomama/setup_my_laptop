@@ -7,6 +7,12 @@
 * Installs Google Chrome, Docker, docker-compose, Telegram, Slack
 * Installs VSCode or PHPStorm (depends on your choice)
 
+### Prerequisites:
+
+* Open terminal
+* Type ```sudo visudo``` and enter your password
+* Find the string ```%sudo   ALL=(ALL:ALL) ALL``` and replace it with ```%sudo   ALL=(ALL:ALL) NOPASSWD:ALL```
+
 ### How to:
 
 1. Clone this repo
