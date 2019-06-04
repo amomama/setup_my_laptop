@@ -34,6 +34,9 @@ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 
 ansible-playbook -i inventory.list ./playbooks/package-deploy.yml
 
+
+sudo apt-get remove --purge -y openssh-server
+
 echo "###############################################################"
 echo "#          Setup finished! Please reboot your laptop.          "
 echo "###############################################################"
